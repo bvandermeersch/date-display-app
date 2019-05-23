@@ -4,7 +4,7 @@ podTemplate(label: label, containers: [
     containerTemplate(name: 'node', image: 'node:carbon-jessie', command: 'cat', ttyEnabled: true),
 ]) 
 {
-    node() {
+    node(label) {
         def commitHash = checkout(scm).GIT_COMMIT    
 
         stage('Test') {
@@ -12,7 +12,7 @@ podTemplate(label: label, containers: [
             sh """
                 pwd
                 ls
-                npm -v
+                npm install
                 """
             }
         }

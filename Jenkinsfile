@@ -1,18 +1,29 @@
 node() {
     echo "Your Pipeline works!"
-    def commitHash = checkout(scm).GIT_COMMIT    
-    sh('ls')
 
-    pipeline {
-    agent {
-        docker { image 'node:7-alpine' }
-    }
-    stages {
+    def label = "worker-${UUID.randomUUID().toString()}"
+
+    podTemplate(label: label, containers: [
+    containerTemplate(name: 'node', image: 'node:carbon-jessie', command: 'cat', ttyEnabled: true),
+    ]) {
+    node() {
+        def commitHash = checkout(scm).GIT_COMMIT    
+
         stage('Test') {
-            steps {
-                sh 'node --version'
+        try {
+            container('node') {
+            sh """
+                pwd
+                ls
+                npm -v
+                """
             }
         }
+        catch (exc) {
+            println "Failed to test - ${currentBuild.fullDisplayName}"
+            throw(exc)
+        }
+        }
     }
-}
+    }
 }

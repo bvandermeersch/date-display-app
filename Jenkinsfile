@@ -1,6 +1,3 @@
-node() {
-    echo "Your Pipeline works!"
-
     def label = "worker-${UUID.randomUUID().toString()}"
 
     podTemplate(label: label, containers: [
@@ -26,4 +23,3 @@ node() {
         }
     }
     }
-}

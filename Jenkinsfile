@@ -13,6 +13,7 @@ podTemplate(label: label, containers: [
                 pwd
                 ls
                 npm install
+                npm test
                 """
             }
         }
